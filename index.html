@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="meta.title">FixTax — Налоги по фиксированной цене</title>
+<meta name="description" data-i18n="meta.desc" content="Бухгалтерия и налоги в США по фиксированной цене. Живой специалист, без скрытых комиссий. Закрываем 2026 и 2027 налоговые периоды.">
+<style>
+  :root{
+    --bg:#0d1117;
+    --bg-soft:#131a24;
+    --panel:#161e2b;
+    --panel-2:#1c2735;
+    --line:#243042;
+    --txt:#e8edf4;
+    --muted:#9aa7b8;
+    --brand:#2bd9a8;
+    --brand-2:#3b82f6;
+    --brand-deep:#0f9d76;
+    --gold:#f5c451;
+    --danger:#ff6b6b;
+    --radius:18px;
+    --shadow:0 18px 50px -18px rgba(0,0,0,.55);
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--txt);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  .accent{color:var(--brand)}
+  .accent-2{color:var(--brand-2)}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(13,17,23,.82);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:21px;letter-spacing:.3px}
+  .logo-mark{
+    width:38px;height:38px;border-radius:11px;
+    background:linear-gradient(135deg,var(--brand),var(--brand-2));
+    display:grid;place-items:center;font-weight:900;color:#06231b;font-size:19px;
+    box-shadow:0 6px 18px -6px var(--brand);
+  }
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{color:var(--muted);font-size:15px;font-weight:500;transition:.2s}
+  .nav-links a:hover{color:var(--txt)}
+  .nav-right{display:flex;align-items:center;gap:14px}
+  .lang{
+    display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+    background:var(--panel);
+  }
+  .lang button{
+    background:transparent;border:0;color:var(--muted);
+    padding:7px 12px;font-weight:700;font-size:13px;cursor:pointer;transition:.2s;
+  }
+  .lang button.active{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#062018}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    padding:13px 22px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;border:0;
+    transition:transform .15s ease, box-shadow .2s, background .2s;white-space:nowrap;
+  }
+  .btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#062018;box-shadow:0 10px 26px -10px var(--brand)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px -10px var(--brand)}
+  .btn-ghost{background:var(--panel);color:var(--txt);border:1px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--brand);color:var(--brand)}
+  .burger{display:none;background:var(--panel);border:1px solid var(--line);color:var(--txt);width:42px;height:42px;border-radius:10px;font-size:20px;cursor:pointer}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;padding:74px 0 64px;overflow:hidden}
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(700px 360px at 78% 8%,rgba(59,130,246,.18),transparent 60%),
+      radial-gradient(640px 380px at 8% 80%,rgba(43,217,168,.16),transparent 60%);
+  }
+  .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.08fr .92fr;gap:52px;align-items:center}
+  .pill{
+    display:inline-flex;align-items:center;gap:9px;
+    background:rgba(43,217,168,.1);border:1px solid rgba(43,217,168,.32);
+    color:var(--brand);padding:8px 15px;border-radius:999px;font-size:13.5px;font-weight:700;margin-bottom:22px;
+  }
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 4px rgba(43,217,168,.18)}
+  h1{font-size:clamp(32px,4.6vw,54px);line-height:1.08;font-weight:800;letter-spacing:-.5px;margin-bottom:20px}
+  .hero p.lead{font-size:18.5px;color:var(--muted);max-width:560px;margin-bottom:30px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:30px}
+  .hero-meta{display:flex;gap:26px;flex-wrap:wrap}
+  .hero-meta div{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:14.5px;font-weight:600}
+  .hero-meta .ico{color:var(--brand)}
+
+  /* Hero card */
+  .hero-card{
+    background:linear-gradient(160deg,var(--panel),var(--bg-soft));
+    border:1px solid var(--line);border-radius:24px;padding:8px;box-shadow:var(--shadow);
+  }
+  .hero-card .img-wrap{border-radius:18px;overflow:hidden;position:relative;height:230px}
+  .hero-card .img-wrap img{width:100%;height:100%;object-fit:cover}
+  .hero-card .body{padding:22px 20px 8px}
+  .price-tag{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+  .price-tag .now{font-size:40px;font-weight:900;color:var(--txt)}
+  .price-tag .per{color:var(--muted);font-size:15px}
+  .price-tag .old{color:var(--muted);text-decoration:line-through;font-size:18px;opacity:.7}
+  .periods{display:flex;gap:10px;margin:16px 0}
+  .period{
+    flex:1;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;
+    padding:12px;text-align:center;
+  }
+  .period b{display:block;font-size:22px;color:var(--brand)}
+  .period span{font-size:12.5px;color:var(--muted)}
+  .hero-card ul{list-style:none;margin:6px 0 0}
+  .hero-card ul li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;font-size:14.5px;color:var(--txt)}
+  .check{color:var(--brand);flex-shrink:0;font-weight:900}
+
+  /* ---------- Sections ---------- */
+  section{padding:78px 0}
+  .sec-head{text-align:center;max-width:680px;margin:0 auto 50px}
+  .sec-tag{color:var(--brand);font-weight:800;letter-spacing:1.6px;font-size:13px;text-transform:uppercase;margin-bottom:14px;display:block}
+  h2{font-size:clamp(27px,3.4vw,40px);font-weight:800;letter-spacing:-.5px;line-height:1.12;margin-bottom:14px}
+  .sec-head p{color:var(--muted);font-size:17px}
+
+  /* trust bar */
+  .trust{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 0}
+  .trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+  .trust-grid .n{font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .trust-grid .l{color:var(--muted);font-size:14px;margin-top:2px}
+
+  /* features */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px;
+    transition:transform .2s, border-color .2s;
+  }
+  .card:hover{transform:translateY(-4px);border-color:rgba(43,217,168,.4)}
+  .card .ico-box{
+    width:50px;height:50px;border-radius:13px;display:grid;place-items:center;font-size:24px;margin-bottom:18px;
+    background:rgba(43,217,168,.12);border:1px solid rgba(43,217,168,.25);
+  }
+  .card h3{font-size:19px;margin-bottom:9px;font-weight:700}
+  .card p{color:var(--muted);font-size:15px}
+
+  /* how it works */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:step}
+  .step{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px}
+  .step .num{
+    width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--brand-2),#1e40af);
+    color:#fff;font-weight:900;display:grid;place-items:center;font-size:18px;margin-bottom:16px;
+  }
+  .step h3{font-size:17px;margin-bottom:7px}
+  .step p{color:var(--muted);font-size:14.5px}
+
+  /* pricing */
+  #pricing{background:var(--bg-soft)}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
+  .plan{
+    background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:32px 28px;
+    display:flex;flex-direction:column;position:relative;transition:transform .2s,border-color .2s;
+  }
+  .plan:hover{transform:translateY(-5px)}
+  .plan.featured{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand),0 24px 50px -22px rgba(43,217,168,.5)}
+  .plan .badge{
+    position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+    background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#062018;
+    font-size:12px;font-weight:800;padding:6px 16px;border-radius:999px;letter-spacing:.5px;white-space:nowrap;
+  }
+  .plan .p-name{font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--brand);margin-bottom:8px}
+  .plan .p-sub{color:var(--muted);font-size:14px;min-height:42px;margin-bottom:18px}
+  .plan .p-price{display:flex;align-items:baseline;gap:7px;margin-bottom:6px}
+  .plan .p-price .amt{font-size:42px;font-weight:900}
+  .plan .p-price .cur{font-size:22px;font-weight:800;color:var(--muted)}
+  .plan .p-price .per{color:var(--muted);font-size:14px}
+  .plan .p-extra{font-size:13.5px;color:var(--gold);font-weight:600;margin-bottom:20px;min-height:20px}
+  .plan ul{list-style:none;margin:6px 0 26px;flex:1}
+  .plan ul li{display:flex;gap:10px;padding:8px 0;font-size:14.5px;border-bottom:1px solid rgba(36,48,66,.5)}
+  .plan ul li:last-child{border-bottom:0}
+  .plan .x{color:var(--muted);opacity:.6}
+
+  /* compare / live vs auto */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:920px;margin:0 auto}
+  .vs-col{border-radius:20px;padding:30px;border:1px solid var(--line)}
+  .vs-col.bad{background:var(--panel);}
+  .vs-col.good{background:linear-gradient(160deg,rgba(43,217,168,.1),var(--panel));border-color:rgba(43,217,168,.4)}
+  .vs-col h3{font-size:20px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .vs-col ul{list-style:none}
+  .vs-col ul li{padding:10px 0;font-size:15px;color:var(--muted);display:flex;gap:11px;align-items:flex-start;border-bottom:1px solid rgba(36,48,66,.5)}
+  .vs-col ul li:last-child{border-bottom:0}
+  .vs-col.good ul li{color:var(--txt)}
+  .mark-bad{color:var(--danger);font-weight:900;flex-shrink:0}
+  .mark-good{color:var(--brand);font-weight:900;flex-shrink:0}
+
+  /* academy */
+  #academy{position:relative;overflow:hidden}
+  .academy-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:48px;align-items:center}
+  .academy-img{border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);height:380px}
+  .academy-img img{width:100%;height:100%;object-fit:cover}
+  .academy-list{display:flex;flex-direction:column;gap:14px;margin:24px 0 28px}
+  .academy-list .row{display:flex;gap:14px;align-items:flex-start}
+  .academy-list .row .ico{
+    width:40px;height:40px;border-radius:11px;background:rgba(59,130,246,.14);border:1px solid rgba(59,130,246,.3);
+    display:grid;place-items:center;flex-shrink:0;font-size:18px;color:var(--brand-2);
+  }
+  .academy-list .row h4{font-size:16px;margin-bottom:2px}
+  .academy-list .row p{color:var(--muted);font-size:14.5px}
+
+  /* FAQ */
+  .faq{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .q summary{
+    list-style:none;cursor:pointer;padding:20px 24px;font-weight:700;font-size:16px;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+  }
+  .q summary::-webkit-details-marker{display:none}
+  .q summary .plus{color:var(--brand);font-size:24px;transition:transform .2s;flex-shrink:0}
+  .q[open] summary .plus{transform:rotate(45deg)}
+  .q .a{padding:0 24px 22px;color:var(--muted);font-size:15px}
+
+  /* CTA band */
+  .cta-band{
+    background:linear-gradient(135deg,rgba(43,217,168,.14),rgba(59,130,246,.12));
+    border:1px solid var(--line);border-radius:26px;padding:52px 44px;text-align:center;position:relative;overflow:hidden;
+  }
+  .cta-band h2{margin-bottom:12px}
+  .cta-band p{color:var(--muted);font-size:17px;max-width:560px;margin:0 auto 26px}
+  .countdown{display:inline-flex;gap:12px;margin-bottom:28px}
+  .cd-box{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-width:74px;text-align:center}
+  .cd-box b{display:block;font-size:30px;font-weight:900;color:var(--brand);font-variant-numeric:tabular-nums}
+  .cd-box span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);background:var(--bg-soft);padding:54px 0 30px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:30px;margin-bottom:36px}
+  .foot-grid h4{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px}
+  .foot-grid a,.foot-grid p{display:block;color:var(--muted);font-size:14.5px;padding:5px 0;transition:.2s}
+  .foot-grid a:hover{color:var(--brand)}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13.5px}
+
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(5,8,12,.74);backdrop-filter:blur(5px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+  .modal-bg.show{display:flex}
+  .modal{
+    background:var(--panel);border:1px solid var(--line);border-radius:20px;max-width:440px;width:100%;
+    padding:34px 30px;box-shadow:var(--shadow);position:relative;animation:pop .25s ease;
+  }
+  @keyframes pop{from{transform:translateY(14px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+  .modal h3{font-size:22px;margin-bottom:6px}
+  .modal p.sub{color:var(--muted);font-size:14.5px;margin-bottom:20px}
+  .modal .close{position:absolute;top:16px;right:16px;background:var(--panel-2);border:1px solid var(--line);color:var(--txt);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:18px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .field input,.field select{
+    width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--txt);font-size:15px;font-family:inherit;
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:var(--brand)}
+  .modal .btn{width:100%;margin-top:6px}
+  .modal .note{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+  .ok-msg{display:none;text-align:center;padding:14px 0}
+  .ok-msg .big{font-size:46px;margin-bottom:10px}
+
+  /* responsive */
+  @media(max-width:960px){
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .grid-3,.plans{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr 1fr}
+    .trust-grid{grid-template-columns:1fr 1fr;gap:26px}
+    .vs{grid-template-columns:1fr}
+    .academy-grid{grid-template-columns:1fr;gap:30px}
+    .academy-img{height:280px;order:-1}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .nav-links{display:none}
+    .burger{display:block}
+    .nav-links.open{display:flex;position:absolute;top:72px;left:0;right:0;flex-direction:column;background:var(--bg-soft);border-bottom:1px solid var(--line);padding:18px 22px;gap:16px}
+  }
+  @media(max-width:560px){
+    .steps{grid-template-columns:1fr}
+    .countdown{gap:8px}
+    .cd-box{min-width:60px;padding:10px 10px}
+    .foot-grid{grid-template-columns:1fr}
+    .cta-band{padding:38px 22px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="wrap nav">
+    <a href="#" class="logo"><span class="logo-mark">F</span>Fix<span class="accent">Tax</span></a>
+    <nav class="nav-links" id="navlinks">
+      <a href="#services" data-i18n="nav.services">Услуги</a>
+      <a href="#how" data-i18n="nav.how">Как это работает</a>
+      <a href="#pricing" data-i18n="nav.pricing">Цены</a>
+      <a href="#academy" data-i18n="nav.academy">Академия</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang">
+        <button data-lang="ru" class="active" onclick="setLang('ru')">RU</button>
+        <button data-lang="en" onclick="setLang('en')">EN</button>
+      </div>
+      <button class="btn btn-primary" onclick="openModal()" data-i18n="nav.cta">Закрыть налоги</button>
+      <button class="burger" onclick="document.getElementById('navlinks').classList.toggle('open')">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">Живой бухгалтер · Не робот</span></span>
+      <h1 data-i18n="hero.title">Налоги в США по <span class="accent">фиксированной цене</span></h1>
+      <p class="lead" data-i18n="hero.lead">Оплачиваете один раз — закрываем сразу <b>два налоговых периода: 2026 и 2027</b>. Без скрытых комиссий, без платы за консультации. Живой специалист ведёт вас лично.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="openModal()" data-i18n="hero.cta1">Зафиксировать спец-цену</button>
+        <a href="#pricing" class="btn btn-ghost" data-i18n="hero.cta2">Смотреть тарифы</a>
+      </div>
+      <div class="hero-meta">
+        <div><span class="ico">✓</span> <span data-i18n="hero.m1">Русско- и англоговорящие</span></div>
+        <div><span class="ico">✓</span> <span data-i18n="hero.m2">LLC и фрилансеры</span></div>
+        <div><span class="ico">✓</span> <span data-i18n="hero.m3">Без скрытых fee</span></div>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80" alt="Accounting documents and calculator">
+      </div>
+      <div class="body">
+        <div class="price-tag">
+          <span class="now">$300</span>
+          <span class="per" data-i18n="hero.card.per">/ фикс. за период</span>
+          <span class="old">$540</span>
+        </div>
+        <div class="periods">
+          <div class="period"><b>2026</b><span data-i18n="hero.card.p1">период включён</span></div>
+          <div class="period"><b>2027</b><span data-i18n="hero.card.p2">период включён</span></div>
+        </div>
+        <ul>
+          <li><span class="check">✓</span> <span data-i18n="hero.card.l1">Полное ведение и подача деклараций</span></li>
+          <li><span class="check">✓</span> <span data-i18n="hero.card.l2">2 персональные консультации (звонок / видео)</span></li>
+          <li><span class="check">✓</span> <span data-i18n="hero.card.l3">Документооборот по электронной почте</span></li>
+          <li><span class="check">✓</span> <span data-i18n="hero.card.l4">Персональный координатор</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST BAR ============ -->
+<div class="trust">
+  <div class="wrap trust-grid">
+    <div><div class="n">2</div><div class="l" data-i18n="trust.t1">налоговых периода в одной цене</div></div>
+    <div><div class="n">$0</div><div class="l" data-i18n="trust.t2">скрытых комиссий и плат</div></div>
+    <div><div class="n">1:1</div><div class="l" data-i18n="trust.t3">личный бухгалтер за вами</div></div>
+    <div><div class="n">2</div><div class="l" data-i18n="trust.t4">консультации в сезон включены</div></div>
+  </div>
+</div>
+
+<!-- ============ SERVICES / WHY ============ -->
+<section id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag" data-i18n="serv.tag">Почему мы</span>
+      <h2 data-i18n="serv.title">Прозрачно. Фиксировано. По-человечески.</h2>
+      <p data-i18n="serv.sub">Мы не продаём подписку с сюрпризами. Вы платите один раз и точно знаете, что входит в цену.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="ico-box">🔒</div>
+        <h3 data-i18n="serv.c1.t">Фиксированная цена</h3>
+        <p data-i18n="serv.c1.p">Стоимость известна заранее и не меняется. Никаких доплат за вопросы, консультации или «сложность кейса».</p>
+      </div>
+      <div class="card">
+        <div class="ico-box">📅</div>
+        <h3 data-i18n="serv.c2.t">Два периода сразу</h3>
+        <p data-i18n="serv.c2.p">Оплачивая здесь и сейчас, вы закрываете налоговые периоды 2026 и 2027 — и забываете о налогах надолго.</p>
+      </div>
+      <div class="card">
+        <div class="ico-box">👤</div>
+        <h3 data-i18n="serv.c3.t">Живой специалист</h3>
+        <p data-i18n="serv.c3.p">Не автоматическая программа заполнения форм, а реальный бухгалтер, который разбирается в вашей ситуации.</p>
+      </div>
+      <div class="card">
+        <div class="ico-box">🌐</div>
+        <h3 data-i18n="serv.c4.t">На вашем языке</h3>
+        <p data-i18n="serv.c4.p">Работаем с русско- и англоговорящими клиентами: фрилансеры, владельцы LLC и self-employed.</p>
+      </div>
+      <div class="card">
+        <div class="ico-box">📨</div>
+        <h3 data-i18n="serv.c5.t">Удобный документооборот</h3>
+        <p data-i18n="serv.c5.p">Весь обмен документами идёт через электронную почту — без беготни и бумажной волокиты.</p>
+      </div>
+      <div class="card">
+        <div class="ico-box">🤝</div>
+        <h3 data-i18n="serv.c6.t">Персональный координатор</h3>
+        <p data-i18n="serv.c6.p">После оплаты с вами связывается персональный координатор и ведёт вас на каждом этапе.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how" style="background:var(--bg-soft)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag" data-i18n="how.tag">Процесс</span>
+      <h2 data-i18n="how.title">Как это работает</h2>
+      <p data-i18n="how.sub">Систематизированный процесс, в котором живой бухгалтер подключается там, где это действительно важно.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3 data-i18n="how.s1.t">Выбираете категорию</h3>
+        <p data-i18n="how.s1.p">Определяете, какой из трёх вариантов подходит именно вам, и оплачиваете онлайн.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3 data-i18n="how.s2.t">Координатор на связи</h3>
+        <p data-i18n="how.s2.p">С вами связывается персональный координатор и закрепляет за вами бухгалтера.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3 data-i18n="how.s3.t">Документы по почте</h3>
+        <p data-i18n="how.s3.p">Передаёте документы через электронную почту — спокойно и в своём темпе.</p>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <h3 data-i18n="how.s4.t">2 консультации в сезон</h3>
+        <p data-i18n="how.s4.p">В налоговый сезон — две персональные консультации со своим бухгалтером звонком или видео.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag" data-i18n="price.tag">Тарифы</span>
+      <h2 data-i18n="price.title">Выберите свою категорию</h2>
+      <p data-i18n="price.sub">Три понятных направления. Выбираете подходящее, оплачиваете — и с вами связывается персональный координатор.</p>
+    </div>
+    <div class="plans">
+      <!-- Plan 1 -->
+      <div class="plan featured">
+        <span class="badge" data-i18n="price.p1.badge">★ Спец-цена ограничена</span>
+        <div class="p-name" data-i18n="price.p1.name">Бухгалтерия</div>
+        <div class="p-sub" data-i18n="price.p1.sub">Ведение налогов под ключ для фрилансеров и владельцев LLC.</div>
+        <div class="p-price"><span class="cur">$</span><span class="amt">300</span><span class="per" data-i18n="price.perPeriod">/ за период</span></div>
+        <div class="p-extra" data-i18n="price.p1.extra">Закрываем 2026 и 2027 — без скрытых fee</div>
+        <ul>
+          <li><span class="check">✓</span> <span data-i18n="price.p1.f1">Подготовка и подача деклараций</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p1.f2">2 персональные консультации в сезон</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p1.f3">Документооборот по e-mail</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p1.f4">Персональный координатор</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p1.f5">Фиксированная цена, без доплат</span></li>
+        </ul>
+        <button class="btn btn-primary" onclick="openModal('accounting')" data-i18n="price.choose">Выбрать</button>
+      </div>
+
+      <!-- Plan 2 -->
+      <div class="plan">
+        <div class="p-name" data-i18n="price.p2.name">Обучение + контракт</div>
+        <div class="p-sub" data-i18n="price.p2.sub">Обучаем профессии бухгалтера с контрактом работы у нас на год.</div>
+        <div class="p-price"><span class="cur">$</span><span class="amt">200</span><span class="per" data-i18n="price.once">/ единоразово</span></div>
+        <div class="p-extra" data-i18n="price.p2.extra">Контракт работы на 1 год</div>
+        <ul>
+          <li><span class="check">✓</span> <span data-i18n="price.p2.f1">Полная программа обучения</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p2.f2">Работа в нашей системе</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p2.f3">Контракт и стабильный поток клиентов</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p2.f4">Сопровождение наставника</span></li>
+          <li><span class="x">—</span> <span class="x" data-i18n="price.p2.f5">Без права искать клиентов самому</span></li>
+        </ul>
+        <button class="btn btn-ghost" onclick="openModal('training-contract')" data-i18n="price.choose">Выбрать</button>
+      </div>
+
+      <!-- Plan 3 -->
+      <div class="plan">
+        <div class="p-name" data-i18n="price.p3.name">Обучение без контракта</div>
+        <div class="p-sub" data-i18n="price.p3.sub">Полная свобода: сами ищете клиентов и оказываете услуги под нашим юрлицом.</div>
+        <div class="p-price"><span class="cur">$</span><span class="amt">1000</span><span class="per" data-i18n="price.once">/ единоразово</span></div>
+        <div class="p-extra" data-i18n="price.p3.extra">+ $99 / месяц за сервис юрлица</div>
+        <ul>
+          <li><span class="check">✓</span> <span data-i18n="price.p3.f1">Полная программа обучения</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p3.f2">Свобода искать клиентов самому</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p3.f3">Работа из-под нашего юрлица</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p3.f4">Приём оплат и документооборот</span></li>
+          <li><span class="check">✓</span> <span data-i18n="price.p3.f5">Поддержка и инфраструктура</span></li>
+        </ul>
+        <button class="btn btn-ghost" onclick="openModal('training-free')" data-i18n="price.choose">Выбрать</button>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:14px;margin-top:26px" data-i18n="price.foot">Оплата интегрирована на сайте. После оплаты с вами свяжется персональный координатор.</p>
+  </div>
+</section>
+
+<!-- ============ LIVE vs AUTO ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag" data-i18n="vs.tag">Сравнение</span>
+      <h2 data-i18n="vs.title">Живой подход против автозаполнения</h2>
+      <p data-i18n="vs.sub">В отличие от автоматических программ, у нас за вами закреплён реальный специалист.</p>
+    </div>
+    <div class="vs">
+      <div class="vs-col bad">
+        <h3>🤖 <span data-i18n="vs.bad.t">Автоматические программы</span></h3>
+        <ul>
+          <li><span class="mark-bad">✕</span> <span data-i18n="vs.bad.1">Шаблонные формы без учёта вашей ситуации</span></li>
+          <li><span class="mark-bad">✕</span> <span data-i18n="vs.bad.2">Доплаты за поддержку и «премиум»-вопросы</span></li>
+          <li><span class="mark-bad">✕</span> <span data-i18n="vs.bad.3">Робот, а не человек на сложных вопросах</span></li>
+          <li><span class="mark-bad">✕</span> <span data-i18n="vs.bad.4">Скрытые fee и неожиданные счета</span></li>
+        </ul>
+      </div>
+      <div class="vs-col good">
+        <h3>👤 <span data-i18n="vs.good.t">FixTax — живой специалист</span></h3>
+        <ul>
+          <li><span class="mark-good">✓</span> <span data-i18n="vs.good.1">Личный бухгалтер разбирается в вашем кейсе</span></li>
+          <li><span class="mark-good">✓</span> <span data-i18n="vs.good.2">Фиксированная цена без доплат за консультации</span></li>
+          <li><span class="mark-good">✓</span> <span data-i18n="vs.good.3">2 живые консультации звонком или видео в сезон</span></li>
+          <li><span class="mark-good">✓</span> <span data-i18n="vs.good.4">Два налоговых периода в одной цене</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ACADEMY ============ -->
+<section id="academy" style="background:var(--bg-soft)">
+  <div class="wrap academy-grid">
+    <div class="academy-img">
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80" alt="Team learning together">
+    </div>
+    <div>
+      <span class="sec-tag" data-i18n="acad.tag">Академия для СНГ</span>
+      <h2 data-i18n="acad.title">Станьте бухгалтером для рынка США</h2>
+      <p style="color:var(--muted);font-size:17px;margin-bottom:8px" data-i18n="acad.sub">Мы обучаем специалистов из стран СНГ вести бухгалтерию для клиентов в США. За счёт разницы в оплате вы получаете доступ к стабильному и хорошо оплачиваемому направлению.</p>
+      <div class="academy-list">
+        <div class="row">
+          <div class="ico">🎓</div>
+          <div><h4 data-i18n="acad.r1.t">Профессия с нуля</h4><p data-i18n="acad.r1.p">Системное обучение и наставник, который доводит до результата.</p></div>
+        </div>
+        <div class="row">
+          <div class="ico">💼</div>
+          <div><h4 data-i18n="acad.r2.t">Работа на рынок США</h4><p data-i18n="acad.r2.p">Доступ к клиентам и оплате в долларах — из любой точки СНГ.</p></div>
+        </div>
+        <div class="row">
+          <div class="ico">🏢</div>
+          <div><h4 data-i18n="acad.r3.t">Под нашим юрлицом</h4><p data-i18n="acad.r3.p">Принимайте оплаты и оказывайте услуги легально из-под нашей компании.</p></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('academy')" data-i18n="acad.cta">Записаться в академию</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA + COUNTDOWN ============ -->
+<section>
+  <div class="wrap">
+    <div class="cta-band">
+      <span class="sec-tag" data-i18n="cta.tag">Ограниченное предложение</span>
+      <h2 data-i18n="cta.title">Спец-цена действует не вечно</h2>
+      <p data-i18n="cta.sub">Зафиксируйте фиксированную цену на два налоговых периода, пока действует специальное предложение.</p>
+      <div class="countdown" id="countdown">
+        <div class="cd-box"><b id="cd-d">00</b><span data-i18n="cta.days">дней</span></div>
+        <div class="cd-box"><b id="cd-h">00</b><span data-i18n="cta.hours">часов</span></div>
+        <div class="cd-box"><b id="cd-m">00</b><span data-i18n="cta.mins">минут</span></div>
+        <div class="cd-box"><b id="cd-s">00</b><span data-i18n="cta.secs">секунд</span></div>
+      </div>
+      <div>
+        <button class="btn btn-primary" onclick="openModal()" data-i18n="cta.btn">Зафиксировать цену сейчас</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" style="background:var(--bg-soft)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag" data-i18n="faq.tag">Вопросы</span>
+      <h2 data-i18n="faq.title">Частые вопросы</h2>
+    </div>
+    <div class="faq">
+      <details class="q">
+        <summary><span data-i18n="faq.q1">Что значит «фиксированная цена»?</span><span class="plus">+</span></summary>
+        <div class="a" data-i18n="faq.a1">Стоимость известна заранее и не меняется. Нет доплат за консультации, вопросы или «сложность» вашего случая.</div>
+      </details>
+      <details class="q">
+        <summary><span data-i18n="faq.q2">Почему сразу два периода — 2026 и 2027?</span><span class="plus">+</span></summary>
+        <div class="a" data-i18n="faq.a2">Оплачивая по спец-цене здесь и сейчас, вы закрываете сразу два налоговых периода и надолго забываете о налоговой рутине.</div>
+      </details>
+      <details class="q">
+        <summary><span data-i18n="faq.q3">Я фрилансер с LLC. Это для меня?</span><span class="plus">+</span></summary>
+        <div class="a" data-i18n="faq.a3">Да. Мы работаем с фрилансерами, владельцами LLC и self-employed — русско- и англоговорящими.</div>
+      </details>
+      <details class="q">
+        <summary><span data-i18n="faq.q4">Как проходят консультации?</span><span class="plus">+</span></summary>
+        <div class="a" data-i18n="faq.a4">В налоговый сезон вы получаете две персональные консультации со своим бухгалтером — звонком или по видео. Весь остальной документооборот идёт через электронную почту.</div>
+      </details>
+      <details class="q">
+        <summary><span data-i18n="faq.q5">Чем вы отличаетесь от программ автозаполнения?</span><span class="plus">+</span></summary>
+        <div class="a" data-i18n="faq.a5">Главное отличие — живой подход и живой специалист. Реальный бухгалтер разбирается в вашей ситуации, а не подставляет шаблон в форму.</div>
+      </details>
+      <details class="q">
+        <summary><span data-i18n="faq.q6">Чем отличается обучение с контрактом и без?</span><span class="plus">+</span></summary>
+        <div class="a" data-i18n="faq.a6">С контрактом ($200) вы обучаетесь и работаете в нашей системе год. Без контракта ($1000 + $99/мес) — сами ищете клиентов и работаете из-под нашего юрлица, принимая оплаты.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="logo" style="margin-bottom:14px"><span class="logo-mark">F</span>Fix<span class="accent">Tax</span></a>
+        <p style="max-width:320px" data-i18n="foot.about">Бухгалтерия и налоги в США по фиксированной цене. Живой специалист, прозрачные условия, без скрытых комиссий.</p>
+      </div>
+      <div>
+        <h4 data-i18n="foot.nav">Навигация</h4>
+        <a href="#services" data-i18n="nav.services">Услуги</a>
+        <a href="#pricing" data-i18n="nav.pricing">Цены</a>
+        <a href="#academy" data-i18n="nav.academy">Академия</a>
+        <a href="#faq" data-i18n="nav.faq">FAQ</a>
+      </div>
+      <div>
+        <h4 data-i18n="foot.serv">Услуги</h4>
+        <a href="#pricing" data-i18n="price.p1.name">Бухгалтерия</a>
+        <a href="#pricing" data-i18n="price.p2.name">Обучение + контракт</a>
+        <a href="#pricing" data-i18n="price.p3.name">Обучение без контракта</a>
+      </div>
+      <div>
+        <h4 data-i18n="foot.contact">Контакты</h4>
+        <a href="mailto:hello@fixtax.example">hello@fixtax.example</a>
+        <p data-i18n="foot.lang">RU · EN</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 FixTax. <span data-i18n="foot.rights">Все права защищены.</span></span>
+      <span data-i18n="foot.disclaimer">Сайт носит информационный характер и не является налоговой консультацией.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ MODAL ============ -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="close" onclick="closeModal()">✕</button>
+    <div id="modalForm">
+      <h3 data-i18n="modal.title">Зафиксировать спец-цену</h3>
+      <p class="sub" data-i18n="modal.sub">Оставьте контакты — персональный координатор свяжется с вами и поможет с оплатой.</p>
+      <div class="field">
+        <label data-i18n="modal.name">Имя</label>
+        <input type="text" id="f-name" data-i18n-ph="modal.name.ph" placeholder="Ваше имя">
+      </div>
+      <div class="field">
+        <label data-i18n="modal.email">Email</label>
+        <input type="email" id="f-email" placeholder="you@email.com">
+      </div>
+      <div class="field">
+        <label data-i18n="modal.plan">Категория</label>
+        <select id="f-plan">
+          <option value="accounting" data-i18n="modal.opt1">Бухгалтерия — $300 / период</option>
+          <option value="training-contract" data-i18n="modal.opt2">Обучение + контракт — $200</option>
+          <option value="training-free" data-i18n="modal.opt3">Обучение без контракта — $1000 + $99/мес</option>
+          <option value="academy" data-i18n="modal.opt4">Академия СНГ</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="submitForm()" data-i18n="modal.btn">Перейти к оплате</button>
+      <p class="note" data-i18n="modal.note">Без скрытых fee. Оплата защищена.</p>
+    </div>
+    <div class="ok-msg" id="okMsg">
+      <div class="big">✅</div>
+      <h3 data-i18n="modal.ok.t">Заявка принята!</h3>
+      <p class="sub" data-i18n="modal.ok.p">Ваш персональный координатор скоро свяжется с вами. Спасибо за доверие!</p>
+      <button class="btn btn-primary" onclick="closeModal()" data-i18n="modal.ok.btn">Готово</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================== i18n ===================== */
+const I18N = {
+  ru:{
+    "meta.title":"FixTax — Налоги по фиксированной цене",
+    "nav.services":"Услуги","nav.how":"Как это работает","nav.pricing":"Цены","nav.academy":"Академия","nav.faq":"FAQ","nav.cta":"Закрыть налоги",
+    "hero.pill":"Живой бухгалтер · Не робот",
+    "hero.title":"Налоги в США по <span class='accent'>фиксированной цене</span>",
+    "hero.lead":"Оплачиваете один раз — закрываем сразу <b>два налоговых периода: 2026 и 2027</b>. Без скрытых комиссий, без платы за консультации. Живой специалист ведёт вас лично.",
+    "hero.cta1":"Зафиксировать спец-цену","hero.cta2":"Смотреть тарифы",
+    "hero.m1":"Русско- и англоговорящие","hero.m2":"LLC и фрилансеры","hero.m3":"Без скрытых fee",
+    "hero.card.per":"/ фикс. за период","hero.card.p1":"период включён","hero.card.p2":"период включён",
+    "hero.card.l1":"Полное ведение и подача деклараций","hero.card.l2":"2 персональные консультации (звонок / видео)","hero.card.l3":"Документооборот по электронной почте","hero.card.l4":"Персональный координатор",
+    "trust.t1":"налоговых периода в одной цене","trust.t2":"скрытых комиссий и плат","trust.t3":"личный бухгалтер за вами","trust.t4":"консультации в сезон включены",
+    "serv.tag":"Почему мы","serv.title":"Прозрачно. Фиксировано. По-человечески.","serv.sub":"Мы не продаём подписку с сюрпризами. Вы платите один раз и точно знаете, что входит в цену.",
+    "serv.c1.t":"Фиксированная цена","serv.c1.p":"Стоимость известна заранее и не меняется. Никаких доплат за вопросы, консультации или «сложность кейса».",
+    "serv.c2.t":"Два периода сразу","serv.c2.p":"Оплачивая здесь и сейчас, вы закрываете налоговые периоды 2026 и 2027 — и забываете о налогах надолго.",
+    "serv.c3.t":"Живой специалист","serv.c3.p":"Не автоматическая программа заполнения форм, а реальный бухгалтер, который разбирается в вашей ситуации.",
+    "serv.c4.t":"На вашем языке","serv.c4.p":"Работаем с русско- и англоговорящими клиентами: фрилансеры, владельцы LLC и self-employed.",
+    "serv.c5.t":"Удобный документооборот","serv.c5.p":"Весь обмен документами идёт через электронную почту — без беготни и бумажной волокиты.",
+    "serv.c6.t":"Персональный координатор","serv.c6.p":"После оплаты с вами связывается персональный координатор и ведёт вас на каждом этапе.",
+    "how.tag":"Процесс","how.title":"Как это работает","how.sub":"Систематизированный процесс, в котором живой бухгалтер подключается там, где это действительно важно.",
+    "how.s1.t":"Выбираете категорию","how.s1.p":"Определяете, какой из трёх вариантов подходит именно вам, и оплачиваете онлайн.",
+    "how.s2.t":"Координатор на связи","how.s2.p":"С вами связывается персональный координатор и закрепляет за вами бухгалтера.",
+    "how.s3.t":"Документы по почте","how.s3.p":"Передаёте документы через электронную почту — спокойно и в своём темпе.",
+    "how.s4.t":"2 консультации в сезон","how.s4.p":"В налоговый сезон — две персональные консультации со своим бухгалтером звонком или видео.",
+    "price.tag":"Тарифы","price.title":"Выберите свою категорию","price.sub":"Три понятных направления. Выбираете подходящее, оплачиваете — и с вами связывается персональный координатор.",
+    "price.perPeriod":"/ за период","price.once":"/ единоразово","price.choose":"Выбрать","price.foot":"Оплата интегрирована на сайте. После оплаты с вами свяжется персональный координатор.",
+    "price.p1.badge":"★ Спец-цена ограничена","price.p1.name":"Бухгалтерия","price.p1.sub":"Ведение налогов под ключ для фрилансеров и владельцев LLC.","price.p1.extra":"Закрываем 2026 и 2027 — без скрытых fee",
+    "price.p1.f1":"Подготовка и подача деклараций","price.p1.f2":"2 персональные консультации в сезон","price.p1.f3":"Документооборот по e-mail","price.p1.f4":"Персональный координатор","price.p1.f5":"Фиксированная цена, без доплат",
+    "price.p2.name":"Обучение + контракт","price.p2.sub":"Обучаем профессии бухгалтера с контрактом работы у нас на год.","price.p2.extra":"Контракт работы на 1 год",
+    "price.p2.f1":"Полная программа обучения","price.p2.f2":"Работа в нашей системе","price.p2.f3":"Контракт и стабильный поток клиентов","price.p2.f4":"Сопровождение наставника","price.p2.f5":"Без права искать клиентов самому",
+    "price.p3.name":"Обучение без контракта","price.p3.sub":"Полная свобода: сами ищете клиентов и оказываете услуги под нашим юрлицом.","price.p3.extra":"+ $99 / месяц за сервис юрлица",
+    "price.p3.f1":"Полная программа обучения","price.p3.f2":"Свобода искать клиентов самому","price.p3.f3":"Работа из-под нашего юрлица","price.p3.f4":"Приём оплат и документооборот","price.p3.f5":"Поддержка и инфраструктура",
+    "vs.tag":"Сравнение","vs.title":"Живой подход против автозаполнения","vs.sub":"В отличие от автоматических программ, у нас за вами закреплён реальный специалист.",
+    "vs.bad.t":"Автоматические программы","vs.bad.1":"Шаблонные формы без учёта вашей ситуации","vs.bad.2":"Доплаты за поддержку и «премиум»-вопросы","vs.bad.3":"Робот, а не человек на сложных вопросах","vs.bad.4":"Скрытые fee и неожиданные счета",
+    "vs.good.t":"FixTax — живой специалист","vs.good.1":"Личный бухгалтер разбирается в вашем кейсе","vs.good.2":"Фиксированная цена без доплат за консультации","vs.good.3":"2 живые консультации звонком или видео в сезон","vs.good.4":"Два налоговых периода в одной цене",
+    "acad.tag":"Академия для СНГ","acad.title":"Станьте бухгалтером для рынка США","acad.sub":"Мы обучаем специалистов из стран СНГ вести бухгалтерию для клиентов в США. За счёт разницы в оплате вы получаете доступ к стабильному и хорошо оплачиваемому направлению.",
+    "acad.r1.t":"Профессия с нуля","acad.r1.p":"Системное обучение и наставник, который доводит до результата.",
+    "acad.r2.t":"Работа на рынок США","acad.r2.p":"Доступ к клиентам и оплате в долларах — из любой точки СНГ.",
+    "acad.r3.t":"Под нашим юрлицом","acad.r3.p":"Принимайте оплаты и оказывайте услуги легально из-под нашей компании.",
+    "acad.cta":"Записаться в академию",
+    "cta.tag":"Ограниченное предложение","cta.title":"Спец-цена действует не вечно","cta.sub":"Зафиксируйте фиксированную цену на два налоговых периода, пока действует специальное предложение.",
+    "cta.days":"дней","cta.hours":"часов","cta.mins":"минут","cta.secs":"секунд","cta.btn":"Зафиксировать цену сейчас",
+    "faq.tag":"Вопросы","faq.title":"Частые вопросы",
+    "faq.q1":"Что значит «фиксированная цена»?","faq.a1":"Стоимость известна заранее и не меняется. Нет доплат за консультации, вопросы или «сложность» вашего случая.",
+    "faq.q2":"Почему сразу два периода — 2026 и 2027?","faq.a2":"Оплачивая по спец-цене здесь и сейчас, вы закрываете сразу два налоговых периода и надолго забываете о налоговой рутине.",
+    "faq.q3":"Я фрилансер с LLC. Это для меня?","faq.a3":"Да. Мы работаем с фрилансерами, владельцами LLC и self-employed — русско- и англоговорящими.",
+    "faq.q4":"Как проходят консультации?","faq.a4":"В налоговый сезон вы получаете две персональные консультации со своим бухгалтером — звонком или по видео. Весь остальной документооборот идёт через электронную почту.",
+    "faq.q5":"Чем вы отличаетесь от программ автозаполнения?","faq.a5":"Главное отличие — живой подход и живой специалист. Реальный бухгалтер разбирается в вашей ситуации, а не подставляет шаблон в форму.",
+    "faq.q6":"Чем отличается обучение с контрактом и без?","faq.a6":"С контрактом ($200) вы обучаетесь и работаете в нашей системе год. Без контракта ($1000 + $99/мес) — сами ищете клиентов и работаете из-под нашего юрлица, принимая оплаты.",
+    "foot.about":"Бухгалтерия и налоги в США по фиксированной цене. Живой специалист, прозрачные условия, без скрытых комиссий.",
+    "foot.nav":"Навигация","foot.serv":"Услуги","foot.contact":"Контакты","foot.lang":"RU · EN","foot.rights":"Все права защищены.","foot.disclaimer":"Сайт носит информационный характер и не является налоговой консультацией.",
+    "modal.title":"Зафиксировать спец-цену","modal.sub":"Оставьте контакты — персональный координатор свяжется с вами и поможет с оплатой.",
+    "modal.name":"Имя","modal.name.ph":"Ваше имя","modal.email":"Email","modal.plan":"Категория",
+    "modal.opt1":"Бухгалтерия — $300 / период","modal.opt2":"Обучение + контракт — $200","modal.opt3":"Обучение без контракта — $1000 + $99/мес","modal.opt4":"Академия СНГ",
+    "modal.btn":"Перейти к оплате","modal.note":"Без скрытых fee. Оплата защищена.",
+    "modal.ok.t":"Заявка принята!","modal.ok.p":"Ваш персональный координатор скоро свяжется с вами. Спасибо за доверие!","modal.ok.btn":"Готово"
+  },
+  en:{
+    "meta.title":"FixTax — Taxes at a Fixed Price",
+    "nav.services":"Services","nav.how":"How it works","nav.pricing":"Pricing","nav.academy":"Academy","nav.faq":"FAQ","nav.cta":"File my taxes",
+    "hero.pill":"A real accountant · Not a bot",
+    "hero.title":"US taxes at a <span class='accent'>fixed price</span>",
+    "hero.lead":"Pay once — we close <b>two tax periods at once: 2026 and 2027</b>. No hidden fees, no charge for consultations. A real specialist handles you personally.",
+    "hero.cta1":"Lock in the special price","hero.cta2":"View plans",
+    "hero.m1":"Russian & English speakers","hero.m2":"LLCs & freelancers","hero.m3":"No hidden fees",
+    "hero.card.per":"/ fixed per period","hero.card.p1":"period included","hero.card.p2":"period included",
+    "hero.card.l1":"Full bookkeeping & filing of returns","hero.card.l2":"2 personal consultations (call / video)","hero.card.l3":"Document exchange via email","hero.card.l4":"Personal coordinator",
+    "trust.t1":"tax periods in one price","trust.t2":"hidden fees or charges","trust.t3":"personal accountant on your side","trust.t4":"in-season consultations included",
+    "serv.tag":"Why us","serv.title":"Transparent. Fixed. Human.","serv.sub":"We don't sell subscriptions full of surprises. You pay once and know exactly what's included.",
+    "serv.c1.t":"Fixed price","serv.c1.p":"The cost is known upfront and never changes. No surcharges for questions, consultations or “case complexity”.",
+    "serv.c2.t":"Two periods at once","serv.c2.p":"Pay here and now and close both the 2026 and 2027 tax periods — and forget about taxes for a long time.",
+    "serv.c3.t":"A real specialist","serv.c3.p":"Not an automated form-filling program, but a real accountant who understands your situation.",
+    "serv.c4.t":"In your language","serv.c4.p":"We work with Russian- and English-speaking clients: freelancers, LLC owners and the self-employed.",
+    "serv.c5.t":"Easy document flow","serv.c5.p":"All document exchange happens over email — no running around, no paperwork hassle.",
+    "serv.c6.t":"Personal coordinator","serv.c6.p":"After payment a personal coordinator reaches out and guides you through every step.",
+    "how.tag":"Process","how.title":"How it works","how.sub":"A systematized process where a real accountant steps in exactly where it truly matters.",
+    "how.s1.t":"Choose a category","how.s1.p":"Decide which of the three options fits you and pay online.",
+    "how.s2.t":"Coordinator reaches out","how.s2.p":"A personal coordinator contacts you and assigns your accountant.",
+    "how.s3.t":"Documents by email","how.s3.p":"Send your documents over email — calmly and at your own pace.",
+    "how.s4.t":"2 in-season consultations","how.s4.p":"During tax season — two personal consultations with your accountant by call or video.",
+    "price.tag":"Pricing","price.title":"Choose your category","price.sub":"Three clear tracks. Pick the right one, pay — and a personal coordinator gets in touch.",
+    "price.perPeriod":"/ per period","price.once":"/ one-time","price.choose":"Choose","price.foot":"Payment is integrated on the site. After payment a personal coordinator will contact you.",
+    "price.p1.badge":"★ Special price — limited","price.p1.name":"Accounting","price.p1.sub":"Turnkey tax handling for freelancers and LLC owners.","price.p1.extra":"Covers 2026 & 2027 — no hidden fees",
+    "price.p1.f1":"Preparation & filing of returns","price.p1.f2":"2 personal consultations in season","price.p1.f3":"Document exchange via email","price.p1.f4":"Personal coordinator","price.p1.f5":"Fixed price, no surcharges",
+    "price.p2.name":"Training + contract","price.p2.sub":"We train you as an accountant with a one-year work contract with us.","price.p2.extra":"1-year work contract",
+    "price.p2.f1":"Full training program","price.p2.f2":"Work inside our system","price.p2.f3":"Contract & steady client flow","price.p2.f4":"Mentor support","price.p2.f5":"No right to find clients yourself",
+    "price.p3.name":"Training, no contract","price.p3.sub":"Full freedom: find your own clients and serve them under our legal entity.","price.p3.extra":"+ $99 / month for entity service",
+    "price.p3.f1":"Full training program","price.p3.f2":"Freedom to find your own clients","price.p3.f3":"Operate under our legal entity","price.p3.f4":"Accept payments & document flow","price.p3.f5":"Support & infrastructure",
+    "vs.tag":"Comparison","vs.title":"A human approach vs. auto-fill","vs.sub":"Unlike automated programs, we assign a real specialist to you.",
+    "vs.bad.t":"Automated programs","vs.bad.1":"Template forms that ignore your situation","vs.bad.2":"Surcharges for support and “premium” questions","vs.bad.3":"A bot, not a human, on tricky questions","vs.bad.4":"Hidden fees and surprise bills",
+    "vs.good.t":"FixTax — a real specialist","vs.good.1":"A personal accountant who understands your case","vs.good.2":"Fixed price with no charge for consultations","vs.good.3":"2 live consultations by call or video in season","vs.good.4":"Two tax periods in one price",
+    "acad.tag":"Academy for the CIS","acad.title":"Become an accountant for the US market","acad.sub":"We train specialists from CIS countries to handle accounting for US clients. Thanks to the pay gap, you gain access to a stable, well-paid track.",
+    "acad.r1.t":"A profession from scratch","acad.r1.p":"Systematic training and a mentor who drives you to results.",
+    "acad.r2.t":"Work for the US market","acad.r2.p":"Access to clients and payment in dollars — from anywhere in the CIS.",
+    "acad.r3.t":"Under our legal entity","acad.r3.p":"Accept payments and provide services legally under our company.",
+    "acad.cta":"Join the academy",
+    "cta.tag":"Limited offer","cta.title":"The special price won't last forever","cta.sub":"Lock in the fixed price for two tax periods while the special offer is still on.",
+    "cta.days":"days","cta.hours":"hours","cta.mins":"mins","cta.secs":"secs","cta.btn":"Lock in the price now",
+    "faq.tag":"Questions","faq.title":"Frequently asked questions",
+    "faq.q1":"What does “fixed price” mean?","faq.a1":"The cost is known upfront and never changes. No surcharges for consultations, questions or the “complexity” of your case.",
+    "faq.q2":"Why two periods at once — 2026 and 2027?","faq.a2":"By paying the special price here and now, you close two tax periods at once and forget about tax routine for a long time.",
+    "faq.q3":"I'm a freelancer with an LLC. Is this for me?","faq.a3":"Yes. We work with freelancers, LLC owners and the self-employed — both Russian- and English-speaking.",
+    "faq.q4":"How do consultations work?","faq.a4":"During tax season you get two personal consultations with your accountant — by call or video. All other document exchange happens over email.",
+    "faq.q5":"How are you different from auto-fill programs?","faq.a5":"The key difference is the human approach and a real specialist. A real accountant understands your situation instead of dropping a template into a form.",
+    "faq.q6":"What's the difference between training with and without a contract?","faq.a6":"With a contract ($200) you train and work in our system for a year. Without a contract ($1000 + $99/mo) you find your own clients and work under our legal entity, accepting payments.",
+    "foot.about":"US accounting and taxes at a fixed price. A real specialist, transparent terms, no hidden fees.",
+    "foot.nav":"Navigation","foot.serv":"Services","foot.contact":"Contacts","foot.lang":"RU · EN","foot.rights":"All rights reserved.","foot.disclaimer":"This site is informational and is not tax advice.",
+    "modal.title":"Lock in the special price","modal.sub":"Leave your details — a personal coordinator will contact you and help with payment.",
+    "modal.name":"Name","modal.name.ph":"Your name","modal.email":"Email","modal.plan":"Category",
+    "modal.opt1":"Accounting — $300 / period","modal.opt2":"Training + contract — $200","modal.opt3":"Training, no contract — $1000 + $99/mo","modal.opt4":"CIS Academy",
+    "modal.btn":"Proceed to payment","modal.note":"No hidden fees. Payment is secure.",
+    "modal.ok.t":"Request received!","modal.ok.p":"Your personal coordinator will contact you shortly. Thank you for your trust!","modal.ok.btn":"Done"
+  }
+};
+
+let currentLang = 'ru';
+function setLang(lang){
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  const dict = I18N[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key]!==undefined) el.innerHTML = dict[key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-ph');
+    if(dict[key]!==undefined) el.setAttribute('placeholder', dict[key]);
+  });
+  document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+  document.title = dict['meta.title'];
+}
+
+/* ===================== Modal ===================== */
+function openModal(plan){
+  document.getElementById('modalBg').classList.add('show');
+  document.getElementById('modalForm').style.display='block';
+  document.getElementById('okMsg').style.display='none';
+  if(plan){ document.getElementById('f-plan').value = plan; }
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modalBg').classList.remove('show');
+  document.body.style.overflow='';
+}
+function submitForm(){
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  if(!name || !email || !email.includes('@')){
+    alert(currentLang==='ru' ? 'Пожалуйста, заполните имя и корректный email.' : 'Please enter your name and a valid email.');
+    return;
+  }
+  document.getElementById('modalForm').style.display='none';
+  document.getElementById('okMsg').style.display='block';
+}
+document.getElementById('modalBg').addEventListener('click', e=>{ if(e.target.id==='modalBg') closeModal(); });
+
+/* ===================== Countdown (7-day rolling) ===================== */
+(function(){
+  const KEY='fixtax_deadline';
+  let deadline = parseInt(localStorage.getItem(KEY)||'0',10);
+  const now = Date.now();
+  if(!deadline || deadline < now){
+    deadline = now + 7*24*60*60*1000; // 7 days
+    localStorage.setItem(KEY, deadline);
+  }
+  function pad(n){return String(n).padStart(2,'0');}
+  function tick(){
+    let diff = deadline - Date.now();
+    if(diff<0) diff=0;
+    const d=Math.floor(diff/86400000);
+    const h=Math.floor(diff%86400000/3600000);
+    const m=Math.floor(diff%3600000/60000);
+    const s=Math.floor(diff%60000/1000);
+    document.getElementById('cd-d').textContent=pad(d);
+    document.getElementById('cd-h').textContent=pad(h);
+    document.getElementById('cd-m').textContent=pad(m);
+    document.getElementById('cd-s').textContent=pad(s);
+  }
+  tick(); setInterval(tick,1000);
+})();
+
+/* close mobile menu on link click */
+document.querySelectorAll('#navlinks a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navlinks').classList.remove('open')));
+
+/* init */
+setLang('ru');
+</script>
+</body>
+</html>
